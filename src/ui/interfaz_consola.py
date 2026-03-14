@@ -45,12 +45,22 @@ class InterfazConsola:
     def actualizar_libro(self):
         print("\n--- ACTUALIZAR LIBRO ---")
         id_libro = input("Ingrese el ID del libro a actualizar: ")
-        nuevo_titulo = input("Ingrese el nuevo título: ")
-        if self.servicio.actualizar_libro(id_libro, nuevo_titulo):
-            print("Libro actualizado.")
-        else:
-            print("Libro no encontrado.")
+        encontrado = False
+        for libro in self.servicio.listar_libros():
+            if libro.id != id_libro:
+                continue
+            encontrado = True
+            nuevo_titulo = input("Ingrese el nuevo título: ")
+            nuevo_autor = input("Ingrese el nuevo autor: ")
+            if self.servicio.actualizar_libro(id_libro, nuevo_titulo, nuevo_autor):
+                print("Libro actualizado.")
+            else:
+                print("Libro no encontrado.")
+            return
 
+        if not encontrado:
+            print("Libro no encontrado.")
+        
     def eliminar_libro(self):
         print("\n--- ELIMINAR LIBRO ---")
         id_libro = input("Ingrese el ID del libro a eliminar: ")
