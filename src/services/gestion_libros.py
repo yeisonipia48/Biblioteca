@@ -29,6 +29,7 @@ class GestionLibros:
     
     def insertar_al_final(self, libro):
         """Agrega un nodo al final de la estructura lineal"""
+        
         nuevo_nodo = Nodo(libro)
         if not self.cabeza:
             self.cabeza = nuevo_nodo
@@ -38,7 +39,28 @@ class GestionLibros:
         while actual.siguiente:
             actual = actual.siguiente
         actual.siguiente = nuevo_nodo
+        # Realizamos una sincronización con el archivo csv
+        self.sincronizar_csv() # Guardamos los cambios en el archivo físico
+        return True
+        
 
+    # --- GENERAR NUEVO ID UNICO-AUTO_ICREMENT
+    def generar_nuevo_id(self):
+        if not self.cabeza:
+            return 1
+        actual =self.cabeza
+        max_id=0
+
+        while actual:
+            try:
+                id_actual=int(actual.libro.id)
+                if id_actual > max_id:
+                    max_id= id_actual
+            except ValueError:
+                pass # Por si hay algún ID que no sea número
+            actual=actual.siguiente
+        return max_id+1
+    # -- INSERTAR LIBRO CSV 
     # --- LÓGICA DEL DELETE (Eliminación en Lista Enlazada) ---
     def eliminar_libro(self, id_objetivo):
         """
