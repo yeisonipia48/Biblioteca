@@ -2,6 +2,7 @@ import pandas as pd
 import os
 from src.models.libro import Libro
 
+
 class Nodo:
     def __init__(self,libro):
         self.libro = libro
@@ -26,23 +27,47 @@ class GestionLibros:
                     self.insertar_al_final(nuevo_libro)
             except Exception as e:
                 print(f"Error al cargar el CSV: {e}")
-    
+
+    def generar_nuevo_id(self):
+        """Genera un nuevo ID basado en el último libro en la lista"""
+        max_id = 0
+        actual = self.cabeza
+        while actual:
+            try:
+                id_num = int(actual.libro.id)
+                if id_num > max_id:
+                    max_id = id_num
+            except ValueError:
+                pass
+            actual = actual.siguiente
+        return str(max_id + 1)
+
+    # -- VISUALIZAR LIBROS 
+    def mostrar_libros(self):
+        """Recorre la lista para mostrarla en consola"""
+        actual = self.cabeza
+        if not actual:
+            print("La biblioteca está vacía.")
+            return
+        while actual:
+            print(actual.libro)
+            actual = actual.siguiente
+
+    # -- INSERTAR LIBRO CSV 
     def insertar_al_final(self, libro):
         """Agrega un nodo al final de la estructura lineal"""
         
         nuevo_nodo = Nodo(libro)
         if not self.cabeza:
             self.cabeza = nuevo_nodo
-            return
+        else:
+            actual = self.cabeza
+            while actual.siguiente:
+                actual = actual.siguiente
+            actual.siguiente = nuevo_nodo
         
-        actual = self.cabeza
-        while actual.siguiente:
-            actual = actual.siguiente
-        actual.siguiente = nuevo_nodo
-        # Realizamos una sincronización con el archivo csv
-        self.sincronizar_csv() # Guardamos los cambios en el archivo físico
-        return True
-        
+        # Guardar en CSV después de insertar
+        self.sincronizar_csv()
 
     # --- GENERAR NUEVO ID UNICO-AUTO_ICREMENT
     def generar_nuevo_id(self):
@@ -60,7 +85,7 @@ class GestionLibros:
                 pass # Por si hay algún ID que no sea número
             actual=actual.siguiente
         return max_id+1
-    # -- INSERTAR LIBRO CSV 
+    
     # --- LÓGICA DEL DELETE (Eliminación en Lista Enlazada) ---
     def eliminar_libro(self, id_objetivo):
         """
@@ -107,13 +132,3 @@ class GestionLibros:
         
         df = pd.DataFrame(datos)
         df.to_csv(self.archivo_csv, index=False)
-
-    def mostrar_libros(self):
-        """Recorre la lista para mostrarla en consola"""
-        actual = self.cabeza
-        if not actual:
-            print("La biblioteca está vacía.")
-            return
-        while actual:
-            print(actual.libro)
-            actual = actual.siguiente
