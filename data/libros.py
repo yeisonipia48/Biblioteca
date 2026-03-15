@@ -3,11 +3,11 @@ from contextlib import contextmanager
 import os
 
 @contextmanager
-def data(ruta=r'data/Libro1.xlsx'):
+def data(ruta=r'data/libro1.csv'):
     datos = []
     try:
         if os.path.exists(ruta):
-            df = pd.read_excel(ruta)
+            df = pd.read_csv(ruta)
             datos = df.values.tolist() # Convertir a estructura lineal (lista de listas)
         yield datos
     except Exception as e:

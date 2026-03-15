@@ -2,14 +2,14 @@ import pandas as pd
 from data.libros import data
 
 class Manipulacion:
-    ruta = r'data/Libro1.xlsx'
+    ruta = r'data/libro1.csv'
     columnas = ['Id', 'Titulo', 'Autor']
 
     @classmethod
     def _guardar(cls, lista):
         try:
             df = pd.DataFrame(lista, columns=cls.columnas)
-            df.to_excel(cls.ruta, index=False)
+            df.to_csv(cls.ruta, index=False)
         except PermissionError:
             print("\n[!] ERROR: Cierra el archivo Excel 'Libro1.xlsx' y presiona Enter.")
 

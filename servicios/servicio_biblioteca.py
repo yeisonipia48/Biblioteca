@@ -14,7 +14,7 @@ class ServicioBiblioteca:
         nuevo_id = str(len(libros) + 1)
         nueva_fila = [nuevo_id, titulo, autor]
         self.repo.create(nueva_fila)
-        return nuevo_id
+        return Libro(nuevo_id, titulo, autor)
 
     def actualizar_libro(self, id_libro, nuevo_titulo):
         libros = self.repo.read()
